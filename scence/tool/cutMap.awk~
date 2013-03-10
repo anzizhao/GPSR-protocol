@@ -1,0 +1,75 @@
+#切割地图一定区域
+
+BEGIN{
+    min_x = 510
+    max_x = 1622
+    min_y = 580
+    max_y = 1751
+}
+{
+    street_name = $1
+    type  = $2
+    x1 = $3
+    y1 = $4
+    x2 = $5
+    y2 = $6
+
+    cutLine()
+
+}
+END {
+
+
+
+}
+
+function  keepInArea () 
+{
+    # 截掉区域外 保留区域内
+    if ( min_x > x1 ) {
+	x1 = min_x
+    } else if ( max_x < x1 ) {
+	x1 = max_x 
+    }
+
+    if ( min_x > x2 ) {
+	x2 = min_x
+    } else if ( max_x < x2 ) {
+	x2 = max_x 
+    }
+
+    if ( min_y > y1 ) {
+	y1  = min_y 
+    } else if ( max_y < y1 ) {
+	y1  = max_y 
+    }
+
+   if ( min_y > y2 ) {
+	y2  = min_y 
+    } else if ( max_y < y2 ) {
+	y2  = max_y 
+    }
+
+   print street_name, type, x1,  y1,  x2 ,  y2
+}
+
+function cutLine ()
+{
+   
+    if ( min_x < x1 && x1 < max_x  && min_y < y1 &&  y1 < max_y  ) {
+	if  ( min_x < x2  && x2 < max_x  && min_y < y2 &&  y2 < max_y  ) {
+	    # 区域内
+	    print $0 
+	} else {
+	    #与区域相交
+	    keepInArea () 
+	}
+    } else if  ( min_x < x2  && x2 < max_x  && min_y < y2 &&  y2 < max_y  ) {
+	# 区域内相交
+	keepInArea () 
+    } else {
+
+    } 
+	
+}
+

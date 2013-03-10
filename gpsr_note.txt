@@ -1,0 +1,246 @@
+1 gpsr 协议怎样建立sinklist ？ 1 startSink函数将自己的放入 2 recvQuery 将请求的数据包放入
+2 何时调用recvQuery函数  ？ 在recv函数调用 根据数据包gpsr的type字段是否GPSRTYPE_QUERY 调用 
+3 什么时候发送GPSRTYPE_QUERY数据包 ？ 通过query函数发送 
+4 query函数何时被调用？  	1 创建sink节点失败 2 请求数据包超时 3 	   
+5 gpsr 计时器怎样工作 ？
+6 要发送的id不再sinklist上 如何工作？ 
+7 query函数需要查询sinlist_上查询节点的坐标 当节点不再sinklist上 注销数据包 ，但该函数不是应该由id请求得到坐标和路径的吗？   
+
+小结和猜想：
+	gpsr协议没哟记录任何的路径 靠对方的坐标 通过最短路径计算发送 
+
+8 gpsr的sinklist如何得到对方的坐标 
+
+猜想： 
+       query有返回查询结果的功能 关键是send函数
+9 gpsr协议没有send函数的实现的 ？ 
+
+小结与猜想：
+	gpsr只有在源节点才能够填写数据包中gpsr_data信息 该信息为源节点的坐标和目标节点的坐标 
+10 节点时在移动的， 那么源节点发的数据包的中的目的节点的位置信息会改变 那么怎么能够发送的目的节点呢？
+猜想： 数据包要到达目的节点 是靠节点id的 只要目的节点没有离开原来位置的接受无线的范围 （无线传输时一个圆形的区域 不是线状）
+
+
+11 
+   小结与猜想：
+   仿真场景的中先要载入场景然后才initial_node_pos ， 不然nam的时候会出现“your tracefile format older than 10a” 之类的字样
+
+12 仿真得到的数据包的收发结果:
+33 --> 45 
+  send packet : 94
+  receive packet : 94
+  drop  packet : 0
+  total packet : 188
+ 41 --> 50 
+  send packet : 97
+  receive packet : 51
+  drop  packet : 0
+  total packet : 148
+ 52 --> 2 
+  send packet : 93
+  receive packet : 49
+  drop  packet : 0
+  total packet : 142
+ 7 --> 13 
+  send packet : 51
+  receive packet : 51
+  drop  packet : 0
+  total packet : 102
+ 9 --> 25 
+  send packet : 50
+  receive packet : 50
+  drop  packet : 0
+  total packet : 100
+
+
+gpsr.cc-GPSRAgent::recvQuery(Packet *p){
+gpsr.cc-  struct hdr_cmn *cmh = HDR_CMN(p);
+gpsr.cc-  struct hdr_ip *iph = HDR_IP(p);
+gpsr.cc-  struct hdr_gpsr_query *gqh = HDR_GPSR_QUERY(p);
+gpsr.cc-  
+gpsr.cc:  if(sink_list_->new_sink(iph->saddr(), gqh->x_, gqh->y_, 
+gpsr.cc-			  cmh->last_hop_, 1+gqh->hops_, gqh->seqno_))
+gpsr.cc-    query(iph->saddr());
+gpsr.cc-  //  trace("%d recv Query from %d ", my_id_, iph->saddr());  
+gpsr.cc-}
+gpsr.cc-
+
+2. 通过recv函数
+gpsr.cc-    switch(gh->type_){
+gpsr.cc-    case GPSRTYPE_HELLO:
+gpsr.cc-      recvHello(p);
+gpsr.cc-      break;
+gpsr.cc-    case GPSRTYPE_QUERY:
+gpsr.cc:      recvQuery(p);
+gpsr.cc-      break;
+gpsr.cc-    default:
+gpsr.cc-      printf("Error with gf packet type.\n");
+gpsr.cc-      exit(1);
+gpsr.cc-    }
+gpsr.cc-  a_->hellotout();
+gpsr.cc-}
+gpsr.cc-
+gpsr.cc-void
+gpsr.cc-GPSRQueryTimer::expire(Event *e){
+gpsr.cc:  a_->querytout();
+gpsr.cc-}
+gpsr.cc-
+gpsr.cc-void
+gpsr.cc-GPSRAgent::hellotout(){
+gpsr.cc-	getLoc();
+--
+gpsr.cc-}
+gpsr.cc-
+gpsr.cc-void
+gpsr.cc-GPSRAgent::startSink(){
+gpsr.cc-  if(sink_list_->new_sink(my_id_, my_x_, my_y_, 
+gpsr.cc:			  my_id_, 0, query_counter_))
+gpsr.cc:    querytout();
+gpsr.cc-}
+gpsr.cc-
+gpsr.cc-void
+gpsr.cc-GPSRAgent::startSink(double gp){
+gpsr.cc:  query_period_ = gp;
+gpsr.cc-  startSink();
+gpsr.cc-}
+gpsr.cc-
+gpsr.cc-void
+gpsr.cc:GPSRAgent::querytout(){
+gpsr.cc:  query(my_id_);
+gpsr.cc:  query_counter_++;
+gpsr.cc:  query_timer_.resched(query_period_);
+gpsr.cc-}
+gpsr.cc-
+gpsr.cc-void
+gpsr.cc-GPSRAgent::getLoc(){
+gpsr.cc-  GetLocation(&my_x_, &my_y_);
+--
+
+gpsr.cc-void
+gpsr.cc:GPSRAgent::query(nsaddr_t id){
+gpsr.cc-  if(my_id_ < 0) return;
+gpsr.cc-
+gpsr.cc-  Packet *p = allocpkt();
+gpsr.cc-
+gpsr.cc-  struct hdr_cmn *cmh = HDR_CMN(p);
+gpsr.cc-  struct hdr_ip *iph = HDR_IP(p);
+gpsr.cc:  struct hdr_gpsr_query *gqh = HDR_GPSR_QUERY(p);
+gpsr.cc-
+gpsr.cc-  cmh->next_hop_ = IP_BROADCAST;
+gpsr.cc-  cmh->last_hop_ = my_id_;
+gpsr.cc-  cmh->addr_type_ = NS_AF_INET;
+gpsr.cc-  cmh->ptype() = PT_GPSR;
+--
+gpsr.cc-  }else {
+gpsr.cc-    Packet::free(p);
+gpsr.cc-    return;
+gpsr.cc-  }
+gpsr.cc-  gqh->ts_ = (float)GPSR_CURRENT;
+gpsr.cc:  gqh->seqno_ = query_counter_;
+gpsr.cc-
+gpsr.cc-  send(p, 0);
+gpsr.cc-}
+gpsr.cc-
+gpsr.cc-void
+--
+gpsr.cc-
+gpsr.cc-void
+gpsr.cc-GPSRAgent::recvQuery(Packet *p){
+gpsr.cc-  struct hdr_cmn *cmh = HDR_CMN(p);
+gpsr.cc-  struct hdr_ip *iph = HDR_IP(p);
+gpsr.cc:  struct hdr_gpsr_query *gqh = HDR_GPSR_QUERY(p);
+gpsr.cc-  
+gpsr.cc-  if(sink_list_->new_sink(iph->saddr(), gqh->x_, gqh->y_, 
+gpsr.cc-			  cmh->last_hop_, 1+gqh->hops_, gqh->seqno_))
+gpsr.cc:    query(iph->saddr());
+gpsr.cc-  //  trace("%d recv Query from %d ", my_id_, iph->saddr());  
+gpsr.cc-}
+gpsr.cc-
+gpsr.cc-void
+gpsr.cc-GPSRAgent::sinkRecv(Packet *p){
+
+
+2012.10.17
+12. 出现"Wrong last nb 66->-1"错误原因
+    该输出出现在gpsr_neighbor.cc:peri_nexthop()函数里，在判断传入参数last是否为-1，不是查找自身邻居节点表，找不到相应项时候，会出现这个错误。
+    peri_nexthop()是在gpsr.cc:forwardData（）函数里被调用 
+    传入参数时候凭什么判断转发节点有这个节点信息？
+    为什么my_id_为-1呢，当一个节点调用turnon函数后就把自己的id信息写到nblist里面.
+    所有的my_id_都为-1 
+     if(last>-1){
+    struct gpsr_neighbor *lastnb = getnb(last);
+    if(lastnb == NULL) {
+      printf("Wrong last nb %d->%d\n", last, my_id_);
+      exit(1);
+    }
+    alpha = angle(my_x_, my_y_, lastnb->x_, lastnb->y_);
+  }
+  else 
+    alpha = angle(my_x_, my_y_, dx, dy); 
+    这里last是上一条，得到这个地理位置有什么作用呢。为什么一定要在nblist里面存在。
+    						     
+
+void
+GPSRAgent::forwardData(Packet *p){
+  struct hdr_cmn *cmh = HDR_CMN(p);
+  struct hdr_ip *iph = HDR_IP(p);
+
+  if(cmh->direction() == hdr_cmn::UP &&
+     ((nsaddr_t)iph->daddr() == IP_BROADCAST ||
+      iph->daddr() == my_id_)){                        //自身层次数据包传输
+    sinkRecv(p);
+    printf("receive\n");
+    port_dmux_->recv(p, 0);
+    return;
+  }
+  else {
+    struct hdr_gpsr_data *gdh=HDR_GPSR_DATA(p);       //gpsr数据包
+    
+    double dx = gdh->dx_;
+    double dy = gdh->dy_;
+    
+    nsaddr_t nexthop;
+    if(gdh->mode_ == GPSR_MODE_GF){                   //贪婪转发模式
+      nexthop = nblist_->gf_nexthop(dx, dy);          //贪婪算法选择路由
+      
+      if(nexthop == -1){                              //贪婪～找不到路由，转为周边寻找
+	nexthop = nblist_->peri_nexthop(planar_type_, -1,
+					gdh->sx_, gdh->sy_,
+					gdh->dx_, gdh->dy_);
+	gdh->sx_ = my_x_;
+	gdh->sy_ = my_y_;
+	gdh->mode_ = GPSR_MODE_PERI;                  //转换为周边转发策略
+      }
+    }
+    else {
+      double sddis = nblist_->getdis(gdh->sx_, gdh->sy_, gdh->dx_, gdh->dy_);
+      double mydis = nblist_->getdis(my_x_, my_y_, gdh->dx_, gdh->dy_);
+      if(mydis < sddis){
+	//switch back to greedy forwarding mode
+	nexthop = nblist_->gf_nexthop(dx, dy);
+	gdh->mode_ = GPSR_MODE_GF;
+	
+	if(nexthop == -1){
+	  nexthop = 
+	    nblist_->peri_nexthop(planar_type_, -1, 
+				  gdh->sx_, gdh->sy_,
+				  gdh->dx_, gdh->dy_);
+	  gdh->sx_ = my_x_;
+	  gdh->sy_ = my_y_;
+	  gdh->mode_ = GPSR_MODE_PERI;
+	}
+      }
+      else{ //still perimeter routing mode
+	nexthop = 
+	  nblist_->peri_nexthop(planar_type_, cmh->last_hop_, 
+				gdh->sx_, gdh->sy_, gdh->dx_, gdh->dy_);
+      }
+    }
+
+    cmh->direction() = hdr_cmn::DOWN;
+    cmh->addr_type() = NS_AF_INET;
+    cmh->last_hop_ = my_id_;
+    cmh->next_hop_ = nexthop;
+    send(p, 0);
+  }
+}

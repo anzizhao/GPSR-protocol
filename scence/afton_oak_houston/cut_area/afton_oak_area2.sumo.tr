@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<!-- generated on 2013年02月18日 星期一 19时25分02秒 by SUMO gui Version 0.12.3
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.sf.net/xsd/sumo-gui.exeConfiguration.xsd">
+
+    <input>
+        <net-file value="/home/vanzi/src/ns-allinone-2.35/ns-2.35/gpsr/scence/afton_oak_houston/cut_area/afton_oak_area2.net.xml"/>
+        <route-files value="/home/vanzi/src/ns-allinone-2.35/ns-2.35/gpsr/scence/afton_oak_houston/cut_area/afton_oak_area2.rou.xml"/>
+    </input>
+
+    <output>
+        <netstate-dump value="/home/vanzi/src/ns-allinone-2.35/ns-2.35/gpsr/scence/afton_oak_houston/cut_area/afton_oak_area2.sumo.tr"/>
+        <emissions-output value="/home/vanzi/src/ns-allinone-2.35/ns-2.35/gpsr/scence/afton_oak_houston/cut_area/output-emissions.xml"/>
+        <tripinfo-output value="/home/vanzi/src/ns-allinone-2.35/ns-2.35/gpsr/scence/afton_oak_houston/cut_area/output-tripinfos.xml"/>
+        <vehroute-output value="/home/vanzi/src/ns-allinone-2.35/ns-2.35/gpsr/scence/afton_oak_houston/cut_area/output-vehroutes.xml"/>
+    </output>
+
+    <time>
+        <begin value="0"/>
+        <end value="300"/>
+    </time>
+
+    <processing>
+        <route-steps value="-1"/>
+        <time-to-teleport value="-1"/>
+    </processing>
+
+    <report>
+        <print-options value="false"/>
+    </report>
+
+    <random_number>
+        <srand value="23423"/>
+    </random_number>
+
+    <gui_only>
+        <gui-settings-file value=""/>
+    </gui_only>
+
+</configuration>
+-->
+
+<sumo-netstate>
+</sumo-netstate>

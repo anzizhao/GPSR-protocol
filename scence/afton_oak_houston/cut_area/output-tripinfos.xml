@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<!-- generated on Sat 02 Mar 2013 11:18:38 AM HKT by SUMO gui Version 0.12.3
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.sf.net/xsd/sumo-gui.exeConfiguration.xsd">
+
+    <input>
+        <net-file value="/home/anzizhao/src/gpsr/scence/afton_oak_houston/cut_area/afton_oak_area3.net.xml"/>
+        <route-files value="/home/anzizhao/src/gpsr/scence/afton_oak_houston/cut_area/afton_oak_area3.rou.xml"/>
+    </input>
+
+    <output>
+        <netstate-dump value="/home/anzizhao/src/gpsr/scence/afton_oak_houston/cut_area/afton_oak_area3.sumo.tr"/>
+        <emissions-output value="/home/anzizhao/src/gpsr/scence/afton_oak_houston/cut_area/output-emissions.xml"/>
+        <tripinfo-output value="/home/anzizhao/src/gpsr/scence/afton_oak_houston/cut_area/output-tripinfos.xml"/>
+        <vehroute-output value="/home/anzizhao/src/gpsr/scence/afton_oak_houston/cut_area/output-vehroutes.xml"/>
+    </output>
+
+    <time>
+        <begin value="0"/>
+        <end value="300"/>
+    </time>
+
+    <processing>
+        <route-steps value="-1"/>
+        <time-to-teleport value="-1"/>
+    </processing>
+
+    <report>
+        <print-options value="false"/>
+    </report>
+
+    <random_number>
+        <srand value="23423"/>
+    </random_number>
+
+    <gui_only>
+        <gui-settings-file value=""/>
+    </gui_only>
+
+</configuration>
+-->
+
+<tripinfos>
+</tripinfos>

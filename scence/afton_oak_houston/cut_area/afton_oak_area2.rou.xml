@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<!-- generated on Mon Feb 18 19:14:59 2013 by SUMO duarouter Version 0.12.3
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.sf.net/xsd/duarouterConfiguration.xsd">
+
+    <input>
+        <net-file value="/home/vanzi/src/ns-allinone-2.35/ns-2.35/gpsr/scence/afton_oak_houston/cut_area/afton_oak_area2.net.xml"/>
+        <flow-definition value="/home/vanzi/src/ns-allinone-2.35/ns-2.35/gpsr/scence/afton_oak_houston/noneflow.flow.xml"/>
+    </input>
+
+    <output>
+        <output-file value="/home/vanzi/src/ns-allinone-2.35/ns-2.35/gpsr/scence/afton_oak_houston/cut_area/afton_oak_area2.rou.xml"/>
+    </output>
+
+    <processing>
+        <continue-on-unbuild value="true"/>
+    </processing>
+
+    <time>
+        <begin value="0"/>
+        <end value="300"/>
+    </time>
+
+    <report>
+        <verbose value="true"/>
+    </report>
+
+</configuration>
+-->
+
+<routes>
+</routes>

@@ -1,0 +1,81 @@
+#ifndef _GPSRBUFFERQUEUE_HPP
+#define  _GPSRBUFFERQUEUE_HPP
+
+#include "gpsr.h"
+#include <list>
+#include <functional>
+
+using std::list;
+using std::bind2nd ; 
+
+
+
+//   跳出空洞路由计时器
+//   外界中断计时器时 就是销毁时候
+class GPSRJumpoutTimer :  public TimerHandler {
+public:
+  static unsigned ttls_[4]; 
+private:
+  unsigned ttl_seqno_ ; 
+  u_int8_t   status_;                                                                     //  计时器是否有效
+protected:
+  virtual void expire ( Event * );
+  GPSRAgent *a_;
+  Packet *p_;
+public:
+  GPSRJumpoutTimer ( GPSRAgent *a, Packet *p ) : TimerHandler (), ttl_seqno_(0), p_(p), a_(a) , status_ (1) 
+  {}
+  ~GPSRJumpoutTimer ()
+  {  resched(INFINITE_DELAY) ; }
+  
+  void sendrequest ( ); 
+  
+  bool isUseful () const 
+  {
+    return (status_ == 1) ? true : false ; 
+  }
+ 
+};
+
+
+struct keepTimePacket {
+  Packet *p_ ;
+  GPSRJumpoutTimer t_; 
+  keepTimePacket ( GPSRAgent *a, Packet *p ):p_(p) , t_(a, p)
+  {}
+};
+
+
+
+
+class bufferqueue {
+private:
+  
+  list<keepTimePacket> bq_; 
+  GPSRAgent *a_ ; 
+public :
+  
+  bufferqueue () {}
+  bufferqueue ( GPSRAgent  *a ) a_ (a) {}
+  ~bufferqueue () {}
+  
+  int size () const 
+  {
+    return bq_.size();
+  }
+  void add ( Packet *p )
+  {
+    bq_.push_back ( keepTimePacket( a_, p ) );
+    list<keepTimePacket>::reverse_iterator ktp = bq_.rbegin();
+    // 调用请求 开始计时
+    ktp ->t_.sendrequest (); 
+  }
+
+
+  void delAllTimeout ( double useful_period ); 
+  list<Packet*> pop ( nsaddr_t dst )
+
+};
+
+
+#endif

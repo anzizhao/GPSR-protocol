@@ -1,0 +1,86 @@
+D 64.970720650 _23_ RTR  CBK 83 cbr 52 [13a 2 17 800] ------- [23:0 66:0 30 2] [2] 0 0
+D 76.945724076 _21_ RTR  CBK 96 cbr 52 [13a 42 15 800] ------- [23:0 66:0 29 66] [8] 1 0
+D 80.630595011 _91_ RTR  CBK 101 cbr 52 [13a 8 5b 800] ------- [23:0 66:0 29 8] [10] 1 0
+D 88.384485320 _17_ RTR  CBK 112 cbr 52 [13a 19 11 800] ------- [30:0 70:0 28 25] [3] 2 0
+D 101.154005474 _20_ RTR  CBK 123 cbr 52 [13a 16 14 800] ------- [30:0 70:0 29 22] [9] 1 0
+D 108.181861481 _22_ RTR  CBK 127 cbr 52 [13a 74 16 800] ------- [30:0 70:0 29 116] [13] 1 0
+ 30 --> 70 
+  send packet : 14
+  receive packet : 11
+  forward packet : 0
+  drop  packet : 3
+ 23 --> 66 
+  send packet : 15
+  receive packet : 12
+  forward packet : 0
+  drop  packet : 3
+ 1 --> 123 
+  send packet : 15
+  receive packet : 15
+  forward packet : 0
+  drop  packet : 0
+ 24 --> 118 
+  send packet : 18
+  receive packet : 18
+  forward packet : 0
+  drop  packet : 0
+ 117 --> 121 
+  send packet : 16
+  receive packet : 16
+  forward packet : 0
+  drop  packet : 0
+ 118 --> 127 
+  send packet : 18
+  receive packet : 18
+  forward packet : 0
+  drop  packet : 0
+ 116 --> 125 
+  send packet : 16
+  receive packet : 16
+  forward packet : 0
+  drop  packet : 0
+ 123 --> 117 
+  send packet : 16
+  receive packet : 16
+  forward packet : 0
+  drop  packet : 0
+ 117 --> 121 
+  send packet : 16
+  receive packet : 16
+  forward packet : 0
+  drop  packet : 0
+ 118 --> 127 
+  send packet : 18
+  receive packet : 18
+  forward packet : 0
+  drop  packet : 0
+ 116 --> 125 
+  send packet : 16
+  receive packet : 16
+  forward packet : 0
+  drop  packet : 0
+ 123 --> 117 
+  send packet : 16
+  receive packet : 16
+  forward packet : 0
+  drop  packet : 0
+ 117 --> 121 
+  send packet : 16
+  receive packet : 16
+  forward packet : 0
+  drop  packet : 0
+ 118 --> 127 
+  send packet : 18
+  receive packet : 18
+  forward packet : 0
+  drop  packet : 0
+ 116 --> 125 
+  send packet : 16
+  receive packet : 16
+  forward packet : 0
+  drop  packet : 0
+ 123 --> 117 
+  send packet : 16
+  receive packet : 16
+  forward packet : 0
+  drop  packet : 0
