@@ -3,6 +3,12 @@
 2. 在scence/afton_oak_houston目录下有一个仿真场景(run_40_3afton_gpsr.tcl)可参考。
 3. 在scence/tool 目录下有几个脚本工具，pdr.awk计算丢包率，count_pair.awk用于计算每一对通信流数据包收发情况需要从文件读入通信的节点。cutMap.awk 是用于切割tiger地图。它对tiger地图原文件进行切割。
 
-note：文件打包下载可以点击上面Zip按钮。
 
-欢迎大家测试，交流。邮箱：anzizhaoit@126.com
+
+It is about for the GPSR of VANET protocol， which is base on the KELIU VERSION protocol
+1. the detaill idea is in the 修改内容.doc
+2. there is an example, run_40_3afton_gpsr.tcl, under the scence/afton_oak_houston directory. You can refer to it.
+3. under the scence/tool  directory， there are some tools for this project。
+    pdr.awk    count the lost packet rate
+    count_pair.awk   count the packet  between a pair node 
+    
